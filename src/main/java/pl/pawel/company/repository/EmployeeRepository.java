@@ -2,6 +2,8 @@ package pl.pawel.company.repository;
 
 import pl.pawel.company.entity.Employee;
 
+import java.util.List;
+
 public interface EmployeeRepository {
 
 
@@ -13,7 +15,7 @@ public interface EmployeeRepository {
 
     Employee delete(Long id);
 
+    void deleteAll();
 
-
-
+    List<Employee> getAll();
 }

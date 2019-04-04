@@ -9,49 +9,55 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 public class EmployeeRepositoryImplTest {
 
 
     private  Employee employee ;
-    private List<Employee> employeeList = new ArrayList<>();
+    private EmployeeRepository  employeeRepository= new EmployeeRepositoryImpl();
 
 
     @Before
-    public void setUp() throws Exception {
-        employee = new Employee(1L,"pawel","duplaga");
-        employeeList.add(employee);
+    public void setUp() {
+        employee = new Employee("pawel","duplaga");
+        employeeRepository.create( employee);
     }
 
     @After
-    public void tearDown() throws Exception {
-        employeeList.clear();
+    public void tearDown()  {
+        employeeRepository.deleteAll();
     }
 
     @Test
     public void createTest() {
+        Employee employee = employeeRepository.create(new Employee("1323", "123"));
+        List<Employee> all = employeeRepository.getAll();
+        assertThat(all.size(), equalTo(2)) ;
     }
 
     @Test
     public void updateTest() {
-        Employee update = new Employee(2L,"tomasz","duplaga");
-        employee=update;
-        assertEquals((Long)2L,employee.getId());
-        assertEquals("tomasz",employee.getFirstName());
-        assertEquals("duplaga",employee.getLastName());
+        Employee employee = employeeRepository.getAll().get(0);
+        employee.setFirstName("dupa");
+
+        employeeRepository.update(employee);
+        assertEquals((Long)2L, this.employee.getId());
+        assertEquals("duplaga", this.employee.getLastName());
         //assertEquals(update,employee);
     }
 
     @Test
     public void getTest() {
-        assertEquals((Long)1L,employee.getId());
+        Employee employee = employeeRepository.getAll().get(0);
     }
 
     @Test
     public void deleteTest() {
-        //assertTrue(employeeList.contains(employee));
-        employeeList.remove(employee);
-        assertFalse(employeeList.contains(employee));
+        Employee employee = employeeRepository.getAll().get(0);
+        employeeRepository.delete(employee.getId());
+
+        assertThat(0,equalTo(employeeRepository.getAll().size()));
     }
 }
